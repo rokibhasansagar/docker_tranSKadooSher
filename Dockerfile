@@ -30,15 +30,32 @@ RUN set -xe \
   && apk add -uU --no-cache --purge \
     alpine-sdk coreutils bash sudo shadow curl ca-certificates openssl git \
     make libc-dev gcc libstdc++ wget wput megatools rsync sshpass \
-    python3 zip unzip p7zip bzip2 gzip tar \
+    python3 zip unzip p7zip bzip2 gzip tar xz \
   && rm -rf /var/cache/apk/* /tmp/*
 
 RUN set -xe \
-    && groupadd --gid ${PGID} alpine \
-    && useradd --uid ${PUID} --gid alpine --shell /bin/bash --create-home alpine \
-    && echo 'alpine ALL=NOPASSWD: ALL' >> /etc/shadow
+  && groupadd --gid ${PGID} alpine \
+  && useradd --uid ${PUID} --gid alpine --shell /bin/bash --create-home alpine \
+  && echo 'alpine ALL=NOPASSWD: ALL' >> /etc/shadow
+
+RUN set -xe \
+  && mkdir -p /home/alpine/bin \
+  && curl -L https://github.com/akhilnarang/repo/raw/master/repo -o /usr/bin/repo \
+  && curl -s https://api.github.com/repos/tcnksm/ghr/releases/latest | grep "browser_download_url" | grep "amd64.tar.gz" | cut -d '"' -f 4 | wget -qi - \
+  && tar -xzf ghr_*_amd64.tar.gz \
+  && cp ghr_*_amd64/ghr /usr/bin/ \
+  && rm -rf ghr_* \
+  && chmod a+x /usr/bin/repo /usr/bin/ghr
+
+RUN set -xe \
+  && which repo \
+  && which ghr \
+  && which git \
+  && which wput
+
+RUN set -xe \
+  && echo $PATH
 
 USER alpine
 
-VOLUME /home/alpine/
-WORKDIR /home/alpine/project/
+VOLUME [/home/alpine/]
