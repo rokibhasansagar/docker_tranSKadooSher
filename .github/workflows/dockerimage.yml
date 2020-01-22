@@ -14,7 +14,7 @@ jobs:
     env:
       DOCKER_USERNAME: fr3akyphantom
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      IMAGE_NAME: tranSKadooSher
+      IMAGE_NAME: skadoosh
 
     steps:
     - uses: actions/checkout@v1.2.0
@@ -27,8 +27,6 @@ jobs:
       if: "! contains(github.event.head_commit.message, '[skip ci]')"
       run: >-
         echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USERNAME --password-stdin
-
-        docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
         echo ".git" > .dockerignore
 
