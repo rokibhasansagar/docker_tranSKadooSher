@@ -39,3 +39,7 @@ jobs:
         --tag $DOCKER_USERNAME/$IMAGE_NAME:latest
 
         docker push $DOCKER_USERNAME/$IMAGE_NAME:latest
+
+    - name: Refresh MicroBadger Metadata for Container Info
+      if: "! contains(github.event.head_commit.message, '[skip ci]')"
+      run: curl -X POST "https://hooks.microbadger.com/images/fr3akyphantom/skadoosh/o9fKNYwu31M9bV-2ZpxzOP1bMWc="
