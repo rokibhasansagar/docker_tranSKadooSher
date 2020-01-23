@@ -30,7 +30,7 @@ RUN set -xe \
   && apk add -uU --no-cache --purge \
     alpine-sdk coreutils bash sudo shadow curl ca-certificates git \
     make libc-dev libstdc++ wget wput rsync sshpass openssh openssl \
-    python3 zip unzip tar xz \
+    python3 zip unzip tar xz tree \
   && rm -rf /var/cache/apk/* /tmp/*
 
 RUN set -xe \
