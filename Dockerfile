@@ -28,8 +28,8 @@ RUN set -xe \
 
 RUN set -xe \
   && apk add -uU --no-cache --purge \
-    alpine-sdk coreutils bash sudo shadow curl ca-certificates openssl git \
-    make libc-dev libstdc++ wget wput rsync sshpass \
+    alpine-sdk coreutils bash sudo shadow curl ca-certificates git \
+    make libc-dev libstdc++ wget wput rsync sshpass openssh openssl \
     python3 zip unzip tar xz \
   && rm -rf /var/cache/apk/* /tmp/*
 
