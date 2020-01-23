@@ -29,8 +29,8 @@ RUN set -xe \
 RUN set -xe \
   && apk add -uU --no-cache --purge \
     alpine-sdk coreutils bash sudo shadow curl ca-certificates openssl git \
-    make libc-dev gcc libstdc++ wget wput megatools rsync sshpass \
-    python3 zip unzip p7zip bzip2 gzip tar xz \
+    make libc-dev libstdc++ wget wput rsync sshpass \
+    python3 zip unzip tar xz \
   && rm -rf /var/cache/apk/* /tmp/*
 
 RUN set -xe \
@@ -44,6 +44,7 @@ RUN set -xe \
   && tar -xzf ghr_*_amd64.tar.gz \
   && cp ghr_*_amd64/ghr /usr/bin/ \
   && rm -rf ghr_* \
+  && sed -i '1s/python/python3/g' /usr/bin/repo \
   && chmod a+x /usr/bin/repo /usr/bin/ghr
 
 USER alpine
