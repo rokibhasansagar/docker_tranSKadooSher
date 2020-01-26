@@ -39,13 +39,14 @@ RUN set -xe \
   && echo 'alpine ALL=NOPASSWD: ALL' >> /etc/shadow
 
 RUN set -xe \
-  && curl -L https://github.com/akhilnarang/repo/raw/master/repo -o /usr/bin/repo \
+  && curl -sL https://github.com/akhilnarang/repo/raw/master/repo -o /usr/bin/repo \
   && curl -s https://api.github.com/repos/tcnksm/ghr/releases/latest | grep "browser_download_url" | grep "amd64.tar.gz" | cut -d '"' -f 4 | wget -qi - \
   && tar -xzf ghr_*_amd64.tar.gz \
   && cp ghr_*_amd64/ghr /usr/bin/ \
   && rm -rf ghr_* \
+  && curl -sL https://github.com/fabianonline/telegram.sh/raw/master/telegram -o /usr/bin/telegram \
   && sed -i '1s/python/python3/g' /usr/bin/repo \
-  && chmod a+x /usr/bin/repo /usr/bin/ghr
+  && chmod a+x /usr/bin/repo /usr/bin/ghr /usr/bin/telegram
 
 USER alpine
 
