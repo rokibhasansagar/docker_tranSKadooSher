@@ -48,7 +48,8 @@ RUN set -xe \
   && rm -rf ghr_* \
   && curl -sL https://github.com/fabianonline/telegram.sh/raw/master/telegram -o /usr/bin/telegram \
   && sed -i '1s/python/python3/g' /usr/bin/repo \
-  && chmod a+x /usr/bin/repo /usr/bin/ghr /usr/bin/telegram /usr/bin/pxz
+  && chmod a+x /usr/bin/repo /usr/bin/ghr /usr/bin/telegram /usr/bin/pxz \
+  && pxz -h
 
 USER alpine
 
