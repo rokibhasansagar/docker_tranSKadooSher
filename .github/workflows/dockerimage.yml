@@ -1,4 +1,4 @@
-name: Docker Builder
+name: Test Docker Builder
 
 on:
   push:
