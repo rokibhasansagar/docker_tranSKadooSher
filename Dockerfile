@@ -38,12 +38,7 @@ RUN set -xe \
   && useradd --uid ${PUID} --gid alpine --shell /bin/bash --create-home alpine \
   && echo 'alpine ALL=NOPASSWD: ALL' >> /etc/shadow
 
-RUN set -xe \
-  && git clone https://github.com/krasCGQ/pxz --depth 1 /tmp/pxz \
-  && cd /tmp/pxz \
-  && make all install \
-  && cd - \
-  && which pxz
+COPY --from=fr3akyphantom/droid-builder:latest /usr/bin/pxz /usr/bin/pxz
 
 RUN set -xe \
   && curl -sL https://github.com/akhilnarang/repo/raw/master/repo -o /usr/bin/repo \
@@ -53,7 +48,7 @@ RUN set -xe \
   && rm -rf ghr_* \
   && curl -sL https://github.com/fabianonline/telegram.sh/raw/master/telegram -o /usr/bin/telegram \
   && sed -i '1s/python/python3/g' /usr/bin/repo \
-  && chmod a+x /usr/bin/repo /usr/bin/ghr /usr/bin/telegram
+  && chmod a+x /usr/bin/repo /usr/bin/ghr /usr/bin/telegram /usr/bin/pxz \
 
 USER alpine
 
