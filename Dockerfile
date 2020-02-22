@@ -50,7 +50,7 @@ RUN set -xe \
   && chmod a+x /usr/bin/ghr /usr/bin/telegram
 
 RUN set -xe \
-  && lscpu \
+  && lscpu --all --extended \
   && df -hlT
 
 USER alpine
