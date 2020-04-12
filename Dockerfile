@@ -30,7 +30,7 @@ RUN set -xe \
   && apk add -uU --no-cache --purge \
     alpine-sdk coreutils build-base util-linux bash sudo shadow curl ca-certificates git \
     make libc-dev libstdc++ wget wput rsync sshpass openssh openssl gnupg \
-    python3 zip unzip tar xz pixz tree \
+    python3 zip unzip tar xz pixz tree gawk \
   && rm -rf /var/cache/apk/* /tmp/*
 
 RUN set -xe \
@@ -39,7 +39,7 @@ RUN set -xe \
   && echo 'alpine ALL=NOPASSWD: ALL' >> /etc/shadow
 
 RUN set -xe \
-  && curl -sL https://storage.googleapis.com/git-repo-downloads/repo -o /usr/bin/repo \
+  && curl -L https://github.com/GerritCodeReview/git-repo/raw/v2.5/repo -o /usr/bin/repo \
   && curl -s https://api.github.com/repos/tcnksm/ghr/releases/latest | grep "browser_download_url" | grep "amd64.tar.gz" | cut -d '"' -f 4 | wget -qi - \
   && tar -xzf ghr_*_amd64.tar.gz \
   && cp ghr_*_amd64/ghr /usr/bin/ \
@@ -48,10 +48,6 @@ RUN set -xe \
   && sed -i '1s/python/python3/g' /usr/bin/repo \
   && chmod a+rx /usr/bin/repo \
   && chmod a+x /usr/bin/ghr /usr/bin/telegram
-
-RUN set -xe \
-  && lscpu --all --extended \
-  && df -hlT
 
 USER alpine
 
