@@ -39,7 +39,7 @@ RUN set -xe \
   && echo 'alpine ALL=NOPASSWD: ALL' >> /etc/shadow
 
 RUN set -xe \
-  && curl -L https://github.com/GerritCodeReview/git-repo/raw/v2.5/repo -o /usr/bin/repo \
+  && curl -sL https://github.com/GerritCodeReview/git-repo/raw/stable/repo -o /usr/bin/repo \
   && curl -s https://api.github.com/repos/tcnksm/ghr/releases/latest | grep "browser_download_url" | grep "amd64.tar.gz" | cut -d '"' -f 4 | wget -qi - \
   && tar -xzf ghr_*_amd64.tar.gz \
   && cp ghr_*_amd64/ghr /usr/bin/ \
