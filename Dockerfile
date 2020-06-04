@@ -49,6 +49,6 @@ RUN set -xe \
   && chmod a+rx /usr/bin/repo \
   && chmod a+x /usr/bin/ghr /usr/bin/telegram
 
-USER alpine
+# USER alpine
 
 VOLUME [/home/alpine/]
