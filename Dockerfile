@@ -43,11 +43,11 @@ RUN set -xe \
   && tar -xzf ghr_*_amd64.tar.gz \
   && cp ghr_*_amd64/ghr /usr/bin/ \
   && rm -rf ghr_* \
-  && curl -sL https://github.com/fabianonline/telegram.sh/raw/master/telegram -o /usr/bin/telegram \
   && curl -sL https://github.com/yshalsager/telegram.py/raw/master/telegram.py -o /usr/bin/telegram.py \
+  && sed -i '1i #!\/usr\/bin\/python3' /usr/bin/telegram.py \
   && sed -i '1s/python/python3/g' /usr/bin/repo \
   && chmod a+rx /usr/bin/repo \
-  && chmod a+x /usr/bin/ghr /usr/bin/telegram /usr/bin/telegram.py
+  && chmod a+x /usr/bin/ghr /usr/bin/telegram.py
 
 RUN set -xe && printenv
 
