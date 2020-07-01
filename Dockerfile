@@ -17,8 +17,6 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 LABEL maintainer="fr3akyphantom <rokibhasansagar2014@outlook.com>"
 
-ARG PUID=1000
-ARG PGID=1000
 ENV LANG=C.UTF-8
 
 RUN set -xe \
@@ -34,9 +32,10 @@ RUN set -xe \
   && rm -rf /var/cache/apk/* /tmp/*
 
 RUN set -xe \
-  && groupadd --gid ${PGID} alpine \
-  && useradd --uid ${PUID} --gid alpine --shell /bin/bash --create-home alpine \
-  && echo 'alpine ALL=NOPASSWD: ALL' >> /etc/shadow
+  && groupadd --gid 1000 alpine \
+  && useradd --uid 1000 --gid alpine --shell /bin/bash --create-home alpine \
+  && echo "alpine ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/alpine \
+  && chmod 0440 /etc/sudoers.d/alpine
 
 RUN set -xe \
   && curl -sL https://github.com/GerritCodeReview/git-repo/raw/stable/repo -o /usr/bin/repo \
@@ -45,10 +44,13 @@ RUN set -xe \
   && cp ghr_*_amd64/ghr /usr/bin/ \
   && rm -rf ghr_* \
   && curl -sL https://github.com/fabianonline/telegram.sh/raw/master/telegram -o /usr/bin/telegram \
+  && curl -sL https://github.com/yshalsager/telegram.py/raw/master/telegram.py -o /usr/bin/telegram.py \
   && sed -i '1s/python/python3/g' /usr/bin/repo \
   && chmod a+rx /usr/bin/repo \
-  && chmod a+x /usr/bin/ghr /usr/bin/telegram
+  && chmod a+x /usr/bin/ghr /usr/bin/telegram /usr/bin/telegram.py
 
-# USER alpine
+USER alpine
 
 VOLUME [/home/alpine/]
+
+CMD echo "User $(whoami) running from $PWD with premissions: $(sudo -l)"
