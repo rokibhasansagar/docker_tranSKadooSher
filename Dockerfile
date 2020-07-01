@@ -27,7 +27,7 @@ RUN set -xe \
 RUN set -xe \
   && apk add -uU --no-cache --purge \
     alpine-sdk coreutils build-base util-linux bash sudo shadow curl ca-certificates git \
-    make libc-dev libstdc++ wget wput rsync sshpass openssh openssl gnupg \
+    make libc-dev libc6-compat zlib libstdc++ wget wput rsync sshpass openssh openssl gnupg \
     python3 zip unzip tar xz pixz tree gawk p7zip \
   && rm -rf /var/cache/apk/* /tmp/*
 
@@ -49,8 +49,11 @@ RUN set -xe \
   && chmod a+rx /usr/bin/repo \
   && chmod a+x /usr/bin/ghr /usr/bin/telegram /usr/bin/telegram.py
 
+RUN set -xe && printenv
+
 USER alpine
 
 VOLUME [/home/alpine/]
 
-CMD echo "User $(whoami) running from $PWD with premissions: $(sudo -l)"
+RUN set -xe \
+  && echo "User $(whoami) running from $PWD with premissions: $(sudo -l)"
