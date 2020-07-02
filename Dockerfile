@@ -28,7 +28,7 @@ RUN set -xe \
   && apk add -uU --no-cache --purge \
     alpine-sdk coreutils build-base util-linux bash sudo shadow curl ca-certificates git \
     make libc-dev zlib libstdc++ wget wput rsync sshpass openssh openssl gnupg \
-    python3 zip unzip tar xz pixz tree gawk p7zip \
+    python3 py3-pip zip unzip tar xz pixz tree gawk p7zip \
   && rm -rf /var/cache/apk/* /tmp/*
 
 RUN set -xe \
@@ -45,15 +45,11 @@ RUN set -xe \
   && rm -rf ghr_* \
   && curl -sL https://github.com/yshalsager/telegram.py/raw/master/telegram.py -o /usr/bin/telegram.py \
   && sed -i '1i #!\/usr\/bin\/python3' /usr/bin/telegram.py \
+  && pip3 install requests \
   && sed -i '1s/python/python3/g' /usr/bin/repo \
   && chmod a+rx /usr/bin/repo \
   && chmod a+x /usr/bin/ghr /usr/bin/telegram.py
 
-RUN set -xe && printenv
-
 USER alpine
 
 VOLUME [/home/alpine/]
-
-RUN set -xe \
-  && echo "User $(whoami) running from $PWD with premissions: $(sudo -l)"
