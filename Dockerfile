@@ -1,20 +1,5 @@
 FROM woahbase/alpine-glibc:x86_64
 
-ARG BUILD_DATE
-ARG VCS_REF
-ARG VCS_URL
-ARG VERSION
-
-LABEL org.label-schema.build-date=$BUILD_DATE \
-  org.label-schema.name="tranSKadooSHer" \
-  org.label-schema.description="Alpine based image usable for running tranSKadooSH Projects" \
-  org.label-schema.url="https://rokibhasansagar.github.io" \
-  org.label-schema.vcs-ref=$VCS_REF \
-  org.label-schema.vcs-url=$VCS_URL \
-  org.label-schema.vendor="Rokib Hasan Sagar" \
-  org.label-schema.version=$VERSION \
-  org.label-schema.schema-version="1.0"
-
 LABEL maintainer="fr3akyphantom <rokibhasansagar2014@outlook.com>"
 
 ENV LANG=C.UTF-8
@@ -29,8 +14,10 @@ RUN set -xe \
   && apk upgrade -q --no-cache \
   && apk add -uU --no-cache --purge \
     alpine-sdk coreutils build-base util-linux bash sudo shadow curl ca-certificates git \
-    make libc-dev zlib libstdc++ wget wput rsync sshpass openssh openssl gnupg \
-    python3 py3-pip zip unzip tar xz pixz tree gawk p7zip zstd \
+    make libc-dev libgcc libstdc++ wget wput rsync sshpass openssh openssl gnupg \
+    python3-dev zip unzip tar zlib xz lz4 brotli pixz tree gawk p7zip zstd \
+  && find /usr/local -depth \( \( -type d -a \( -name test -o -name tests -o -name idle_test \) \) \
+    -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \) -exec rm -rf '{}' +; 2>/dev/null \
   && rm -rf /var/cache/apk/* /tmp/*
 
 RUN set -xe \
@@ -38,6 +25,8 @@ RUN set -xe \
   && useradd --uid 1000 --gid alpine --shell /bin/bash --create-home alpine \
   && echo "alpine ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/alpine \
   && chmod 0440 /etc/sudoers.d/alpine
+
+WORKDIR /home
 
 RUN set -xe \
   && curl -sL https://github.com/GerritCodeReview/git-repo/raw/stable/repo -o /usr/bin/repo \
@@ -47,14 +36,18 @@ RUN set -xe \
   && rm -rf ghr_* \
   && curl -sL https://github.com/yshalsager/telegram.py/raw/master/telegram.py -o /usr/bin/telegram.py \
   && sed -i '1i #!\/usr\/bin\/python3' /usr/bin/telegram.py \
-  && pip3 install --upgrade pip \
-  && pip3 install requests \
   && sed -i '1s/python/python3/g' /usr/bin/repo \
+  && wget -q -O get-pip.py https://github.com/pypa/get-pip/raw/master/get-pip.py \
+  && python3 get-pip.py --upgrade --disable-pip-version-check --no-cache-dir \
+  && rm -f get-pip.py \
+  && pip3 install future requests \
+  && find /usr/local -depth \( \( -type d -a \( -name test -o -name tests -o -name idle_test \) \) \
+    -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \) -exec rm -rf '{}' +; 2>/dev/null \
   && chmod a+rx /usr/bin/repo \
   && chmod a+x /usr/bin/ghr /usr/bin/telegram.py
 
 USER alpine
 
-VOLUME ["/home/alpine", "/projects"]
-
 WORKDIR /home/alpine
+
+VOLUME ["/home/alpine", "/projects"]
