@@ -5,20 +5,24 @@ LABEL maintainer="fr3akyphantom <rokibhasansagar2014@outlook.com>"
 ENV LANG=C.UTF-8
 
 RUN set -xe \
+  && echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" > /etc/apk/repositories \
+  && echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" >> /etc/apk/repositories \
   && echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories \
   && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
   && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 
 RUN set -xe \
   && apk update -q --force-refresh \
-  && apk upgrade -q --no-cache \
+  && apk upgrade -q --no-cache --available \
   && apk add -uU --no-cache --purge \
     alpine-sdk coreutils build-base util-linux bash sudo shadow curl ca-certificates git \
-    make libc-dev libgcc libstdc++ wget wput rsync sshpass openssh openssl gnupg \
-    python3-dev zip unzip tar zlib xz lz4 brotli pixz tree gawk p7zip zstd \
+    make libc-dev libgcc libstdc++ wget wput rsync sshpass openssh openssl gnupg xterm \
+    python3-dev zip unzip tar zlib xz lz4 brotli pixz tree gawk p7zip zstd pigz \
   && find /usr/local -depth \( \( -type d -a \( -name test -o -name tests -o -name idle_test \) \) \
     -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \) -exec rm -rf '{}' +; 2>/dev/null \
   && rm -rf /var/cache/apk/* /tmp/*
+
+ENV TERM=xterm-256color
 
 RUN set -xe \
   && groupadd --gid 1000 alpine \
