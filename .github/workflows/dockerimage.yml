@@ -8,8 +8,8 @@ on:
       - 'master'
   workflow_dispatch:
   schedule:
-    # Run at 03:00am, once after every week, every month
-    - cron: '0 3 7,14,21,28 1-12 ?'
+    # Runs at 00:00 UTC on Thu.
+    - cron: '0 0 * * THU'
 
 jobs:
 
